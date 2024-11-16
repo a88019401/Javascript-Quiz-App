@@ -74,32 +74,35 @@ startBtn.addEventListener("click", startQuiz);
 const showQuestion = (question) => {
   const questionText = document.querySelector(".question"),
     answersWrapper = document.querySelector(".answer-wrapper");
-  questionNumber = document.querySelector(".number");
+  const questionNumber = document.querySelector(".number");
 
   questionText.innerHTML = question.question;
 
   const answers = [
     ...question.incorrect_answers,
-    question.correct_answer.toString(),
+    question.correct_answer,
   ];
   answersWrapper.innerHTML = "";
-  answers.sort(() => Math.random() - 0.5);
-  answers.forEach((answer) => {
+  const shuffledAnswers = answers.sort(() => Math.random() - 0.5);
+
+  const labels = ["(A)", "(B)", "(C)", "(D)"];
+  shuffledAnswers.forEach((answer, index) => {
     answersWrapper.innerHTML += `
-                  <div class="answer ">
-            <span class="text">${answer}</span>
-            <span class="checkbox">
-              <i class="fas fa-check"></i>
-            </span>
-          </div>
-        `;
+      <div class="answer">
+        <span class="text">${labels[index]} ${answer}</span>
+        <span class="checkbox">
+          <i class="fas fa-check"></i>
+        </span>
+      </div>
+    `;
   });
 
-  questionNumber.innerHTML = ` Question <span class="current">${
+  questionNumber.innerHTML = `Question <span class="current">${
     questions.indexOf(question) + 1
   }</span>
             <span class="total">/${questions.length}</span>`;
-  //add event listener to each answer
+
+  // 添加選項點擊事件
   const answersDiv = document.querySelectorAll(".answer");
   answersDiv.forEach((answer) => {
     answer.addEventListener("click", () => {
@@ -112,9 +115,6 @@ const showQuestion = (question) => {
       }
     });
   });
-
-  //time = timePerQuestion.value;
-  //startTimer(time);
 };
 
 /*const startTimer = (time) => {
@@ -162,7 +162,8 @@ const checkAnswer = () => {
 
   let userAnswer = "No Answer"; // 預設值，如果使用者未選擇
   if (selectedAnswer) {
-    userAnswer = selectedAnswer.querySelector(".text").innerHTML;
+    userAnswer = selectedAnswer.querySelector(".text").innerHTML.trim();
+    userAnswer = userAnswer.replace(/^\([A-D]\)\s/, ""); // 去掉 "(A) "
   }
 
   // 將作答資料儲存到 userAnswers
@@ -180,7 +181,8 @@ const checkAnswer = () => {
   } else {
     if (selectedAnswer) selectedAnswer.classList.add("wrong");
     document.querySelectorAll(".answer").forEach((answer) => {
-      if (answer.querySelector(".text").innerHTML === currentQuestionData.correct_answer) {
+      const answerText = answer.querySelector(".text").innerHTML.trim();
+      if (answerText.replace(/^\([A-D]\)\s/, "") === currentQuestionData.correct_answer) {
         answer.classList.add("correct");
       }
     });
@@ -189,6 +191,7 @@ const checkAnswer = () => {
   submitBtn.style.display = "none";
   nextBtn.style.display = "block";
 };
+
 
 const nextQuestion = () => {
   if (currentQuestion < questions.length) {
@@ -216,7 +219,7 @@ const showScore = () => {
 
   // 顯示類別
   const categoryDisplay = document.querySelector(".category-display");
-  categoryDisplay.innerHTML = `文法: ${selectedCategory}`;
+  categoryDisplay.innerHTML = `來回顧一下吧～ ${selectedCategory}`;
   console.log(selectedCategory);
 
   // 顯示作答詳情
@@ -246,7 +249,8 @@ restartBtn.addEventListener("click", () => {
   window.location.reload();
 });
 
+/*
 const playAdudio = (src) => {
   const audio = new Audio(src);
   audio.play();
-};
+};*/
