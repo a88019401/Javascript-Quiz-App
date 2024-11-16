@@ -1,3 +1,5 @@
+
+
 const progressBar = document.querySelector(".progress-bar"),
   progressText = document.querySelector(".progress-text");
 
@@ -10,8 +12,8 @@ const progress = (value) => {
 const startBtn = document.querySelector(".start"),
   numQuestions = document.querySelector("#num-questions"),
   category = document.querySelector("#category"),
-  difficulty = document.querySelector("#difficulty"),
-  timePerQuestion = document.querySelector("#time"),
+  //difficulty = document.querySelector("#difficulty"),
+  //timePerQuestion = document.querySelector("#time"),
   quiz = document.querySelector(".quiz"),
   startScreen = document.querySelector(".start-screen");
 
@@ -21,24 +23,51 @@ let questions = [],
   currentQuestion,
   timer;
 
-const startQuiz = () => {
-  const num = numQuestions.value,
-    cat = category.value,
-    diff = difficulty.value;
-  loadingAnimation();
-  const url = `https://opentdb.com/api.php?amount=${num}&category=${cat}&difficulty=${diff}&type=multiple`;
-  fetch(url)
-    .then((res) => res.json())
-    .then((data) => {
-      questions = data.results;
-      setTimeout(() => {
-        startScreen.classList.add("hide");
-        quiz.classList.remove("hide");
-        currentQuestion = 1;
-        showQuestion(questions[0]);
-      }, 1000);
-    });
-};
+let selectedCategory = ""; // 儲存類別
+let userAnswers = []; // 儲存作答資料
+let userName = ""; // 儲存使用者名字
+
+  const startQuiz = () => {
+    const nameInput = document.querySelector("#user-name");
+    if (nameInput.value.trim() === "") {
+      alert("請輸入你的名字再開始測驗！");
+      return;
+    }
+
+    userName = nameInput.value.trim(); // 儲存使用者名字
+    console.log(userName);
+
+    loadingAnimation();
+    // 使用自訂題庫
+    const cat = category.value;
+
+    if (cat === "HanLinB2L3L4test") {
+      questions = HanLinB2L3L4;
+    } else if(cat === "HanLinB4L3L4test") {
+      questions = HanLinB4L3L4;
+    } else if  (cat === "vocabulary") {
+      questions = vocabularyQuestions;
+    } else if (cat === "timeDay") {
+      questions = timeAndDayGrammarQuestions;
+    } else {
+      questions = [...HanLinB2L3L4test, ...timeAndDayGrammarQuestions,...HanLinB4L3L4test];
+    }
+    console.log(cat);
+
+      // 獲取選擇的題目數量
+  const num = parseInt(numQuestions.value, 10); // 轉換為數字
+
+  // 隨機選取指定數量的題目
+  questions = questions.sort(() => Math.random() - 0.5).slice(0, num);
+  console.log(questions);
+
+    setTimeout(() => {
+      startScreen.classList.add("hide");
+      quiz.classList.remove("hide");
+      currentQuestion = 1;
+      showQuestion(questions[0]);
+    }, 1000);
+  };
 
 startBtn.addEventListener("click", startQuiz);
 
@@ -84,11 +113,11 @@ const showQuestion = (question) => {
     });
   });
 
-  time = timePerQuestion.value;
-  startTimer(time);
+  //time = timePerQuestion.value;
+  //startTimer(time);
 };
 
-const startTimer = (time) => {
+/*const startTimer = (time) => {
   timer = setInterval(() => {
     if (time === 3) {
       playAdudio("countdown.mp3");
@@ -100,7 +129,7 @@ const startTimer = (time) => {
       checkAnswer();
     }
   }, 1000);
-};
+};*/
 
 const loadingAnimation = () => {
   startBtn.innerHTML = "Loading";
@@ -112,25 +141,7 @@ const loadingAnimation = () => {
     }
   }, 500);
 };
-function defineProperty() {
-  var osccred = document.createElement("div");
-  osccred.innerHTML =
-    "A Project By <a href='https://www.youtube.com/@opensourcecoding' target=_blank>Open Source Coding</a>";
-  osccred.style.position = "absolute";
-  osccred.style.bottom = "0";
-  osccred.style.right = "0";
-  osccred.style.fontSize = "10px";
-  osccred.style.color = "#ccc";
-  osccred.style.fontFamily = "sans-serif";
-  osccred.style.padding = "5px";
-  osccred.style.background = "#fff";
-  osccred.style.borderTopLeftRadius = "5px";
-  osccred.style.borderBottomRightRadius = "5px";
-  osccred.style.boxShadow = "0 0 5px #ccc";
-  document.body.appendChild(osccred);
-}
 
-defineProperty();
 
 const submitBtn = document.querySelector(".submit"),
   nextBtn = document.querySelector(".next");
@@ -147,41 +158,33 @@ nextBtn.addEventListener("click", () => {
 const checkAnswer = () => {
   clearInterval(timer);
   const selectedAnswer = document.querySelector(".answer.selected");
+  const currentQuestionData = questions[currentQuestion - 1];
+
+  let userAnswer = "No Answer"; // 預設值，如果使用者未選擇
   if (selectedAnswer) {
-    const answer = selectedAnswer.querySelector(".text").innerHTML;
-    console.log(currentQuestion);
-    if (answer === questions[currentQuestion - 1].correct_answer) {
-      score++;
-      selectedAnswer.classList.add("correct");
-    } else {
-      selectedAnswer.classList.add("wrong");
-      const correctAnswer = document
-        .querySelectorAll(".answer")
-        .forEach((answer) => {
-          if (
-            answer.querySelector(".text").innerHTML ===
-            questions[currentQuestion - 1].correct_answer
-          ) {
-            answer.classList.add("correct");
-          }
-        });
-    }
-  } else {
-    const correctAnswer = document
-      .querySelectorAll(".answer")
-      .forEach((answer) => {
-        if (
-          answer.querySelector(".text").innerHTML ===
-          questions[currentQuestion - 1].correct_answer
-        ) {
-          answer.classList.add("correct");
-        }
-      });
+    userAnswer = selectedAnswer.querySelector(".text").innerHTML;
   }
-  const answersDiv = document.querySelectorAll(".answer");
-  answersDiv.forEach((answer) => {
-    answer.classList.add("checked");
+
+  // 將作答資料儲存到 userAnswers
+  userAnswers.push({
+    question: currentQuestionData.question,
+    correctAnswer: currentQuestionData.correct_answer,
+    userAnswer: userAnswer,
+    isCorrect: userAnswer === currentQuestionData.correct_answer, // 判斷是否正確
   });
+
+  // 標記正確或錯誤答案
+  if (userAnswer === currentQuestionData.correct_answer) {
+    score++;
+    if (selectedAnswer) selectedAnswer.classList.add("correct");
+  } else {
+    if (selectedAnswer) selectedAnswer.classList.add("wrong");
+    document.querySelectorAll(".answer").forEach((answer) => {
+      if (answer.querySelector(".text").innerHTML === currentQuestionData.correct_answer) {
+        answer.classList.add("correct");
+      }
+    });
+  }
 
   submitBtn.style.display = "none";
   nextBtn.style.display = "block";
@@ -199,12 +202,44 @@ const nextQuestion = () => {
 const endScreen = document.querySelector(".end-screen"),
   finalScore = document.querySelector(".final-score"),
   totalScore = document.querySelector(".total-score");
+
+
 const showScore = () => {
   endScreen.classList.remove("hide");
   quiz.classList.add("hide");
   finalScore.innerHTML = score;
   totalScore.innerHTML = `/ ${questions.length}`;
+  // 顯示名字
+  const userNameDisplay = document.querySelector(".user-name-display");
+  userNameDisplay.innerHTML = `你好, ${userName}！`;
+  console.log(userName);
+
+  // 顯示類別
+  const categoryDisplay = document.querySelector(".category-display");
+  categoryDisplay.innerHTML = `文法: ${selectedCategory}`;
+  console.log(selectedCategory);
+
+  // 顯示作答詳情
+
+  const answerDetails = document.querySelector(".answer-details");
+  answerDetails.innerHTML = ""; // 清空之前的內容
+
+  userAnswers.forEach((answer, index) => {
+    const isCorrectClass = answer.isCorrect ? "correct-answer" : "wrong-answer";
+    answerDetails.innerHTML += `
+      <div class="answer-detail ${isCorrectClass}">
+        <p><strong>Q${index + 1}:</strong> ${answer.question}</p>
+        <p><strong>你的回答:</strong> ${answer.userAnswer}</p>
+        <p><strong>正確解答:</strong> ${answer.correctAnswer}</p>
+      </div>
+      <hr>
+    `;
+
+  });
+
 };
+
+
 
 const restartBtn = document.querySelector(".restart");
 restartBtn.addEventListener("click", () => {
