@@ -135,8 +135,8 @@
     },
     {
       question: "The show is at six p.m. Let’s ______ late.",
-      correct_answer: "  not",
-      incorrect_answers: ["  don’t", "  no", "  not be"]
+      correct_answer: "  not be",
+      incorrect_answers: ["  don’t", "  no", "  not"]
     },
     {
       question: "A: ______<br>B: He can sing.",
@@ -224,8 +224,8 @@
     },
     {
       question: "_______, look at your teacher and listen to her. Time for class.",
-      correct_answer: "  Please",
-      incorrect_answers: ["  Don’t", "  Let’s", "  Boys and girls"]
+      correct_answer: "  Boys and girls",
+      incorrect_answers: ["  Don’t", "  Let’s", "  Please"]
     },
     {
       question: "The cartoon “SLAM DUNK” is on TV ______ Monday______ Friday. I watch it every evening.<br> cartoon 卡通",
@@ -763,13 +763,13 @@
   },
   {
     question: "My family were having dinner when the bad guy __________ in the restaurant. I often think of that scary moment now.",
-    correct_answer: "  was going",
-    incorrect_answers: ["  went", "  goes", "  is going"]
+    correct_answer: " went",
+    incorrect_answers: ["  was going", "  goes", "  is going"]
   },
   {
     question: "Samuel: Start your car now. The show is at 7:20. We’re late.<br>Roger: Be cool! It’s __________. We have thirty minutes before it starts.",
-    correct_answer: "  twenty after six",
-    incorrect_answers: ["  a quarter to eight", "  ten to seven", "  seven o’clock"]
+    correct_answer: " ten to seven",
+    incorrect_answers: ["  a quarter to eight", "  twenty after six", "  seven o’clock"]
   },
   {
     question: "__________ a lot of fun for students to camp in the mountains with classmates or friends.",
