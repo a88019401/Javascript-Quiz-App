@@ -207,7 +207,7 @@ const endScreen = document.querySelector(".end-screen"),
   totalScore = document.querySelector(".total-score");
 
 
-/*const showScore = () => {
+const showScore = () => {
   endScreen.classList.remove("hide");
   quiz.classList.add("hide");
   finalScore.innerHTML = score;
@@ -241,41 +241,8 @@ const endScreen = document.querySelector(".end-screen"),
 
   });
 
-};*/
-
-const showScore = () => {
-  endScreen.classList.remove("hide");
-  quiz.classList.add("hide");
-  finalScore.innerHTML = score;
-  totalScore.innerHTML = `/ ${questions.length}`;
-
-  // 顯示名字
-  const userNameDisplay = document.querySelector(".user-name-display");
-  userNameDisplay.innerHTML = `你好, ${userName}！`;
-  console.log(userName);
-
-  // 記錄測驗時間
-  const testTime = new Date().toLocaleString();
-
-  // 發送數據到 Google Sheets
-  submitResultsToGoogleSheets(userName, testTime, questions.length, score);
-
-  // 顯示作答詳情
-  const answerDetails = document.querySelector(".answer-details");
-  answerDetails.innerHTML = ""; // 清空之前的內容
-
-  userAnswers.forEach((answer, index) => {
-    const isCorrectClass = answer.isCorrect ? "correct-answer" : "wrong-answer";
-    answerDetails.innerHTML += `
-      <div class="answer-detail ${isCorrectClass}">
-        <p><strong>Q${index + 1}:</strong> ${answer.question}</p>
-        <p><strong>你的回答:</strong> ${answer.userAnswer}</p>
-        <p><strong>正確解答:</strong> ${answer.correctAnswer}</p>
-      </div>
-      <hr>
-    `;
-  });
 };
+
 
 
 
@@ -294,31 +261,3 @@ const playAdudio = (src) => {
 
 
 
-const submitResultsToGoogleSheets = async (name, testTime, totalQuestions, score) => {
-  const scriptURL = "https://script.google.com/macros/s/AKfycbz9Dwdy3Ncr6ck5QDhqL7E8W5yxITnu-ZUGbuqgie32BALM0xEN4ILnd0NxdXnC2IhX/exec"; // 替換為你的 Apps Script URL
-  const payload = {
-    name: name,
-    testTime: testTime,
-    totalQuestions: totalQuestions,
-    score: score,
-  };
-
-  try {
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    console.log("Google Sheets Response:", result);
-  } catch (error) {
-    console.error("Error submitting results:", error);
-  }
-};
