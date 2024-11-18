@@ -1,5 +1,3 @@
-
-
 const progressBar = document.querySelector(".progress-bar"),
   progressText = document.querySelector(".progress-text");
 
@@ -212,7 +210,6 @@ const showScore = () => {
   quiz.classList.add("hide");
   finalScore.innerHTML = score;
   totalScore.innerHTML = `/ ${questions.length}`;
-
   // 顯示名字
   const userNameDisplay = document.querySelector(".user-name-display");
   userNameDisplay.innerHTML = `你好, ${userName}！`;
@@ -245,9 +242,6 @@ const showScore = () => {
 
 
 
-
-
-
 const restartBtn = document.querySelector(".restart");
 restartBtn.addEventListener("click", () => {
   window.location.reload();
@@ -258,6 +252,3 @@ const playAdudio = (src) => {
   const audio = new Audio(src);
   audio.play();
 };*/
-
-
-
