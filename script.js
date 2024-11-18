@@ -212,9 +212,7 @@ const showScore = () => {
   quiz.classList.add("hide");
   finalScore.innerHTML = score;
   totalScore.innerHTML = `/ ${questions.length}`;
-//回傳google表單
-  const completionTime = new Date(); // 假設測驗結束時間
-  submitResultsToGoogleSheets(userName, score, questions.length, completionTime);
+
   // 顯示名字
   const userNameDisplay = document.querySelector(".user-name-display");
   userNameDisplay.innerHTML = `你好, ${userName}！`;
@@ -259,29 +257,4 @@ const playAdudio = (src) => {
 };*/
 
 
-//回傳到google sheets
-const submitResultsToGoogleSheets = async (name, score, totalQuestions, completionTime) => {
-  const scriptURL = "https://script.google.com/macros/s/AKfycbybFtX3CzlHcNquJ-9CpgcmB6XYIFFnVbwhwXZfN0Xwf5q8NCEBH9TwYgEaourlz_vB/exec"; // 替換為你的 Apps Script URL
-  const payload = {
-    name: name,
-    score: score,
-    totalQuestions: totalQuestions,
-    completionTime: completionTime,
-  };
-
-  try {
-    const response = await fetch(scriptURL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-
-    const result = await response.json();
-    console.log("Success:", result);
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
 
